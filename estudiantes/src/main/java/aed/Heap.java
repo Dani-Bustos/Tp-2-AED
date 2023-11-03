@@ -1,9 +1,9 @@
 package aed;
 
-import java.util.Random; //BORRAR
+
 
 public class Heap implements IHeap {
-
+    
     private int tamaño;
     private int[] rep;
 
