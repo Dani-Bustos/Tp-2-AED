@@ -2,9 +2,11 @@ package aed;
 public class SistemaCNE {
     private int[] vPresidente;
     private String[] nomPartido;
+    private String[] nomDistrito;
     private int[] bancasXDistrito;
     private int[] mesas; //guardamos el ultimo elemento de la mesa, no incluido
     private int[][] votosXDistrito; //Primer Array distrito, segundo array votos de cada partido 
+    private boolean[] heapDistritoValido;
     // private array de heaps, cada pos es un distrito
 
     private int BusquedaBinariaEnRango(int[] arreglo,int elem){
@@ -47,7 +49,14 @@ public class SistemaCNE {
     }
 
     public SistemaCNE(String[] nombresDistritos, int[] diputadosPorDistrito, String[] nombresPartidos, int[] ultimasMesasDistritos) {
-        throw new UnsupportedOperationException("No implementada aun");
+     nomDistrito = nombresDistritos;
+     bancasXDistrito = diputadosPorDistrito;
+     nomPartido = nombresPartidos;
+     mesas = ultimasMesasDistritos;
+     heapDistritoValido = new boolean[nombresPartidos.length];
+     vPresidente = new int[nombresPartidos.length];
+     votosXDistrito = new int[nombresDistritos.length][nombresPartidos.length]; //no sabemos si es asi o al reves
+     //falta el de heaps
     }
 
     public String nombrePartido(int idPartido) {
