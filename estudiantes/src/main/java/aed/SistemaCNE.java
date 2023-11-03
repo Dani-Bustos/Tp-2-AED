@@ -1,6 +1,7 @@
 package aed;
 public class SistemaCNE {
     private int[] vPresidente;
+    //heapPresidente;
     private String[] nomPartido;
     private String[] nomDistrito;
     private int[] bancasXDistrito;
@@ -8,6 +9,7 @@ public class SistemaCNE {
     private int[][] votosXDistrito; //Primer Array distrito, segundo array votos de cada partido 
     private boolean[] heapDistritoValido;
     // private array de heaps, cada pos es un distrito
+    
 
     private int BusquedaBinariaEnRango(int[] arreglo,int elem){
         int l = 0;
