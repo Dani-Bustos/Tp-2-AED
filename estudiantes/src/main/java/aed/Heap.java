@@ -1,5 +1,7 @@
 package aed;
 
+import java.util.Random; //BORRAR
+
 public class Heap implements IHeap {
 
     private int tamaño;
@@ -10,10 +12,26 @@ public class Heap implements IHeap {
         rep = new int[buffer];
     }
 
-    public Heap(int[] arreglo) {
-        //FALTA
-        rep = new int[arreglo.length];
+    public Heap(int[] arreglo) { 
+        tamaño = arreglo.length;
+        rep = new int[tamaño];
+        for (int i = 0; i < arreglo.length; i++) {
+            rep[i] = arreglo[i];
+        }
+        for (int h = altura() - 1; h > 0; h--) { //algoritmo de Floyd
+            for (int i = (int)Math.pow(2, h-1) - 1; i < (int)Math.pow(2, h) - 1; i++) {
+                bajar(i);
+            }
+        }
     }
+
+    public int altura() {
+        int altura = 0;
+        for (int i = 0; i < tamaño; i = i * 2 + 1) altura++;
+        return altura;
+    }
+
+    public int cardinal() { return tamaño; }
 
     public int maximo() { return rep[0]; }
 
@@ -37,11 +55,14 @@ public class Heap implements IHeap {
     public void desencolar() {
         rep[0] = rep[tamaño - 1];
         tamaño -= 1;
-        int ielem = 0;
-        int ihijo = iHijoMayor(ielem);
-        while (rep[ielem] < rep[ihijo]) {
-            intercambiar(ielem, ihijo);
-            ielem = ihijo;
+        bajar(tamaño);
+    }
+
+    private void bajar(int raiz) {
+        int ihijo = iHijoMayor(raiz);
+        while (rep[raiz] < rep[ihijo]) {
+            intercambiar(raiz, ihijo);
+            raiz = ihijo;
             ihijo = iHijoMayor(ihijo);
         }
     }
@@ -60,4 +81,7 @@ public class Heap implements IHeap {
         else return (rep[iHijoDer] > rep[iHijoIzq]) ? iHijoDer : iHijoIzq;
     }
 
+    
 }
+
+
