@@ -15,7 +15,7 @@ public class SistemaCNE {
         int m = (l + r)/2;
         while(l != r){
            if(arreglo[m] == elem){
-            return m;
+            return m + 1;   // el arreglo es no incluido, con lo cual si lo encontramos, es la siguiente pos de mesa
            }else if(r-l == 1 && elem != r && elem != l){ //caso en el que no pertenezeca a la lista directamente
             if(elem < arreglo[l]){
             return l;
@@ -60,19 +60,20 @@ public class SistemaCNE {
     }
 
     public String nombrePartido(int idPartido) {
-        throw new UnsupportedOperationException("No implementada aun");
+        return nomPartido[idPartido];
     }
 
     public String nombreDistrito(int idDistrito) {
-        throw new UnsupportedOperationException("No implementada aun");
+        return nomDistrito[idDistrito];
     }
 
     public int diputadosEnDisputa(int idDistrito) {
-        throw new UnsupportedOperationException("No implementada aun");
+        return bancasXDistrito[idDistrito];
     }
 
     public String distritoDeMesa(int idMesa) {
-        throw new UnsupportedOperationException("No implementada aun");
+        int pos = BusquedaBinariaEnRango(mesas, idMesa);
+        return nombreDistrito(pos);
     }
 
     public void registrarMesa(int idMesa, VotosPartido[] actaMesa) {
@@ -80,11 +81,11 @@ public class SistemaCNE {
     }
 
     public int votosPresidenciales(int idPartido) {
-        throw new UnsupportedOperationException("No implementada aun");
+        return vPresidente[idPartido];
     }
 
     public int votosDiputados(int idPartido, int idDistrito) {
-        throw new UnsupportedOperationException("No implementada aun");
+        return votosXDistrito[idDistrito][idPartido];
     }
 
     public int[] resultadosDiputados(int idDistrito){
