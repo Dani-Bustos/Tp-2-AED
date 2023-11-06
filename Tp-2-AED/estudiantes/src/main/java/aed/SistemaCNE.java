@@ -82,7 +82,7 @@ public class SistemaCNE {
         
         private Heap[] heapXDistrito;
         private int total;
-        private int[] resultadosPrecalculados;
+        private int[][] resultadosPrecalculados;
         private boolean[] heapValido;
         
         
@@ -91,7 +91,7 @@ public class SistemaCNE {
           votosXDistrito = new int[longitudDistritos][longitudPartidos]; //se escribe asi?
           heapValido = new boolean[longitudDistritos];
           heapXDistrito = new Heap[longitudDistritos];
-          resultadosPrecalculados = new int[longitudDistritos];
+          resultadosPrecalculados = new int[longitudDistritos][longitudPartidos-1];
         }
         
         int get(int idDistrito, int idPartido){
@@ -119,7 +119,8 @@ public class SistemaCNE {
             PartidoXVoto[] votosPasanMargen = new PartidoXVoto[pasa3PorCiento];
             int indice_arreglo = 0;
             for(int i = 0; i < votosXDistrito[idDistrito].length-1;i++){
-                if(votosXDistrito[idDistrito][i]*100 >= total*3){
+                if (votosXDistrito[idDistrito][i] * 100 >= total * 3) {
+                    votosPasanMargen[indice_arreglo] = new PartidoXVoto(i, votosXDistrito[idDistrito][i]);
                     votosPasanMargen[indice_arreglo].Votos = votosXDistrito[idDistrito][i];
                     votosPasanMargen[indice_arreglo].idPartido = i;
                     indice_arreglo++;
@@ -132,6 +133,26 @@ public class SistemaCNE {
             
         }
        
+        int[] devolverBancas(int idDistrito,int cantidadBancas) {
+            if (heapValido[idDistrito]) {
+                int[] bancas = new int[votosXDistrito[0].length - 1];
+                
+                for (int i = 0; i < cantidadBancas; i++) {
+                    PartidoXVoto max = heapXDistrito[idDistrito].maximo();
+                    bancas[max.idPartido] += 1;
+                    PartidoXVoto recalculado = new PartidoXVoto(max.idPartido,
+                            (votosXDistrito[idDistrito][max.idPartido]) / (bancas[max.idPartido] + 1));
+                    heapXDistrito[idDistrito].encolar(recalculado);
+                }
+                resultadosPrecalculados[idDistrito] = bancas;
+                heapValido[idDistrito] = false;
+                return bancas;
+            
+            
+            } else {
+                return resultadosPrecalculados[idDistrito];
+            }
+        }
     }
     
     
@@ -197,9 +218,7 @@ public class SistemaCNE {
         }
         return m;
     }
-
-
-   
+    
 
     public void registrarMesa(int idMesa, VotosPartido[] actaMesa) {
         //Actualizamos Votos Presidenciales
@@ -213,9 +232,9 @@ public class SistemaCNE {
         //Ahora Diputados
         int distritoMesa = BusquedaBinariaEnRango(mesas,idMesa);
         PartidoXVoto[] vDiputados = new PartidoXVoto[actaMesa.length];
-        for(int i = 0; i< actaMesa.length;i++){
-            vDiputados[i].idPartido = i;
-            vDiputados[i].Votos = actaMesa[i].diputados;
+        for (int i = 0; i < actaMesa.length; i++) {
+            vDiputados[i] = new PartidoXVoto(i, actaMesa[i].diputados);
+            
         }
         votosDiputados.actualizarDistrito(distritoMesa,vDiputados);
     }
@@ -229,12 +248,17 @@ public class SistemaCNE {
     }
 
     public int[] resultadosDiputados(int idDistrito){
-    return null;
+        
+        int cantidadBancas = bancasXDistrito[idDistrito];
+        int[] res = votosDiputados.devolverBancas(idDistrito, cantidadBancas);
+        return res;
     }
 
     public boolean hayBallotage(){
         //si esta vacio, es verdadero
-        throw new UnsupportedOperationException("No implementada aun");
+        if (votosPresidente.max() = 0) {
+            return True;
+        }
     }
 }
 

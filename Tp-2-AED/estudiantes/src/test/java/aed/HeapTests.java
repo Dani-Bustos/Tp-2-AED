@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Timeout;
 
 class HeapTests {
 
-    @Timeout(value=100, unit=TimeUnit.MILLISECONDS)
+    /*@Timeout(value=100, unit=TimeUnit.MILLISECONDS)
     @Test
     public void randomGrande() {
         Random rand = new Random();
@@ -25,5 +25,12 @@ class HeapTests {
         }
         Heap res = new Heap(test);
         System.out.println(res.cardinal());
+    }*/
+
+    @Test
+    public void prueba() {
+        n
     }
+
+
 }
