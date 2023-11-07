@@ -281,6 +281,7 @@ class SistemaCNETests {
         registrarVotosDeMesa(sistema, 195, votosMesa4);
 
         assertEquals(7, sistema.resultadosDiputados(3)[0]);
+    
         assertEquals(4, sistema.resultadosDiputados(3)[1]);
         assertEquals(5, sistema.resultadosDiputados(3)[2]);
         assertEquals(3, sistema.resultadosDiputados(3)[3]);

@@ -9,11 +9,14 @@ public class SistemaCNE {
     private String[] nomDistrito;
     private int[] bancasXDistrito;
     private int[] mesas; //guardamos el ultimo elemento de la mesa, no incluido
-    
+    // INV REP: A TERMINAR
     public class  PartidoXVoto implements Comparable<PartidoXVoto>{
            int idPartido;
            int Votos;
-            PartidoXVoto(int numPartido, int votos){
+           // Inv Rep
+           // Tanto id partido como votos son numeros positivos o 0.
+           
+           PartidoXVoto(int numPartido, int votos){
                 this.idPartido = numPartido;
                 this.Votos = votos;
             }
@@ -38,12 +41,12 @@ public class SistemaCNE {
         private int idSegundo;
         //BORRADOR 
         // INV REP: El idPrimero es la posicion de _arrPresidente en la cual se encuentra el elemento mas grande del
-        // arreglo, es decir, es el partido (sin contar los votos en blanco) con mas votos.
-        // El idSegundo es la posicion de _arrPresidencial en la cual se encuentra el elemento que es menor o igual al mas grande
-        // pero mayor a todos los demas elementos.
+        // arreglo salvo la ultima posicion, es decir, es el partido (sin contar los votos en blanco) con mas votos.
+        // El idSegundo es la posicion de _arrPresidencial en la cual se encuentra el elemento que es menor o igual al mas grande,
+        // pero mayor a todos los demas elementos salvo la ultima posicion, es decir, es el segundo partido (sin contar los votos en blanco) con mas votos.
         // El total es la suma de todos los elementos de _arrPresidencial, es decir, el total de votos.
         // _arrPresidencial es un arreglo en el cual en la posicion i-esima se encuentra la cantidad de votos para presidente que obtuvo
-        // el i-esimo partido. En la ultima posicion del arreg
+        // el i-esimo partido. En la ultima posicion del arreglo se encuentra la cantidad de votos en blanco. Todos los votos son numeros positivos o 0.
         Presidencial(int longitud){
             this._arrPresidente = new int[longitud];
             _Total = 0;
@@ -89,12 +92,24 @@ public class SistemaCNE {
     }
     public class Diputados{
         private int[][] votosXDistrito; //Primer Array distrito, segundo array votos de cada partido 
-        
         private PriorityQueueTupla[] heapXDistrito;
-        private int total;
+        private int[] total;
         private int[][] resultadosPrecalculados;
         private boolean[] heapValido;
+        // Inv Rep
+        // Para toda posiicon de VotosXDistrito, se cumple que todos los elementos de el arreglo en esa posicion, son positivos o 0
+        // Todos los arreglos en VotosXDistrito tienen la misma longitud. Aqui guardamos los votos de cada partido en cada distrito
         
+        // La posicion iesima del arreglo total estan la suma de los elementos del arreglo votosXDistrito en la posicion iesima.
+        // Es decir los votos totales del distrito son la suma de los votos del distrito
+        // El largo de VotosXDistrito es igual  al tamaño de heapXDistrito. El largo de heapValido es igual al largo de heapxDistrito;
+        // El largo de resultados precalculados es igual al largo de VotosXDistrito, y todos sus elementos tienen la longitud de la cantidad de partidos menos el blanco
+        // (cantidad de partidos siento la longitud de el elemento votosXDistirto[0])
+        
+        // El heapValido iesimo es True si solo si para cada posicion de votosXDistrito, se cumple que todos elementos 
+        //(salvo los votos en blanco) que sean superior el 3% de el total iesimo de ese arreglo estan en la representacion del heapXdistirto iesimo.
+        // Es decir, en el heap guardamos los votos de aquellos partidos que pasan el umbral de 3% en su distrito, Y heap valido nos indica si ese heap esta 
+        // intacto o no. Si no lo estuviese utilizamos el resultado precalculado iesimo(que corresponde al distrito). 
         
         
         Diputados(int longitudDistritos, int longitudPartidos){
@@ -102,6 +117,7 @@ public class SistemaCNE {
           heapValido = new boolean[longitudDistritos];
           heapXDistrito = new PriorityQueueTupla[longitudDistritos];
           resultadosPrecalculados = new int[longitudDistritos][longitudPartidos-1];
+          total = new int[longitudDistritos];    
         }
         
         int get(int idDistrito, int idPartido){
@@ -112,12 +128,12 @@ public class SistemaCNE {
             int pasa3PorCiento = 0;
             for(int i = 0; i < votosMesa.length;i++){
                 votosXDistrito[idDistrito][i] += votosMesa[i].Votos;
-                total += votosMesa[i].Votos;
+                total[idDistrito] += votosMesa[i].Votos;
             }
             
             //Contamos cuantos pasan el 3% para definir la longitud del arreglo que sera el Heap, sin votos en blanco
             for(int i = 0; i<votosXDistrito[idDistrito].length-1;i++){
-                if(votosXDistrito[idDistrito][i]*100 >= total*3){ //calculo del 3% ajustado para evitar floating point
+                if(votosXDistrito[idDistrito][i]*100 >= total[idDistrito]*3){ //calculo del 3% ajustado para evitar floating point
                      pasa3PorCiento ++;
                 }
             }
@@ -129,7 +145,7 @@ public class SistemaCNE {
             PartidoXVoto[] votosPasanMargen = new PartidoXVoto[pasa3PorCiento];
             int indice_arreglo = 0;
             for(int i = 0; i < votosXDistrito[idDistrito].length-1;i++){
-                if (votosXDistrito[idDistrito][i] * 100 >= total * 3) {
+                if (votosXDistrito[idDistrito][i] * 100 >= total[idDistrito] * 3) {
                     votosPasanMargen[indice_arreglo] = new PartidoXVoto(i, votosXDistrito[idDistrito][i]);
                     votosPasanMargen[indice_arreglo].Votos = votosXDistrito[idDistrito][i];
                     votosPasanMargen[indice_arreglo].idPartido = i;

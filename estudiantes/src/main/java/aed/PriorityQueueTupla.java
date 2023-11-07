@@ -3,7 +3,9 @@ package aed;
 import aed.SistemaCNE.PartidoXVoto;
 
 public class PriorityQueueTupla implements IHeap<PartidoXVoto> {
-    
+    //Inv rep
+    // La longitud del arreglo representacion es siempre igual al tamaño 
+    // A PREGUNTAR , SI TENEMOS QUE REAJUSTAR EL ARREGLO PARA QUE SEA UN INVARIANTE MAS "PROPIO"
     private int tamaño;
     private PartidoXVoto[] representacion;
 
