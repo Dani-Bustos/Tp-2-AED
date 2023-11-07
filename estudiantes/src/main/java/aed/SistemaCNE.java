@@ -140,7 +140,7 @@ public class SistemaCNE {
                 int[] bancas = new int[votosXDistrito[0].length - 1];
                 
                 for (int i = 0; i < cantidadBancas; i++) {
-                    PartidoXVoto max = heapXDistrito[idDistrito].maximo();
+                    PartidoXVoto max = heapXDistrito[idDistrito].desencolar();
                     bancas[max.idPartido] += 1;
                     PartidoXVoto recalculado = new PartidoXVoto(max.idPartido,
                             (votosXDistrito[idDistrito][max.idPartido]) / (bancas[max.idPartido] + 1));

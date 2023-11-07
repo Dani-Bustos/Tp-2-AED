@@ -52,15 +52,18 @@ public class PriorityQueueTupla implements IHeap<PartidoXVoto> {
         }
     }
 
-    public void desencolar() {
+    public PartidoXVoto desencolar() {
+        PartidoXVoto res = rep[0];
         rep[0] = rep[tamaño - 1];
+        rep[tamaño-1] = null;
         tamaño -= 1;
-        bajar(tamaño);
+        bajar(0);
+        return res;
     }
 
     private void bajar(int raiz) {
         int ihijo = iHijoMayor(raiz);
-        while (rep[raiz].compareTo(rep[ihijo]) < 0) {
+        while (rep[ihijo] != null && rep[raiz].compareTo(rep[ihijo]) < 0) {
             intercambiar(raiz, ihijo);
             raiz = ihijo;
             ihijo = iHijoMayor(ihijo);
