@@ -256,9 +256,19 @@ public class SistemaCNE {
 
     public boolean hayBallotage(){
         //si esta vacio, es verdadero
+        boolean res;
         if (votosPresidente.max() = 0) {
-            return True;
+            res = true;
+        }else{
+            //multiplicamos por 100 para no utilizar floating points
+            if (votosPresidente.max*100 > votosPresidente.total*45 || 
+              (votosPresidente.max*100 > votosPresidente.total*40 && (votosPresidente.max - votosPresidente.sdoMax)*100 > votosPresidente.total*10) ){
+                  res = false;
+            }else{
+                res = true;
+            }
         }
-    }
+       return res;
+    } 
 }
 
