@@ -36,6 +36,8 @@ public class SistemaCNE {
         private int _Total;
         private int idPrimero;
         private int idSegundo;
+        //BORRADOR 
+        // INV REP: El idPrimero es la
         Presidencial(int longitud){
             this._arrPresidente = new int[longitud];
             _Total = 0;

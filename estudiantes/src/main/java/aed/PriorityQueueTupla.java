@@ -5,18 +5,18 @@ import aed.SistemaCNE.PartidoXVoto;
 public class PriorityQueueTupla implements IHeap<PartidoXVoto> {
     
     private int tamaño;
-    private PartidoXVoto[] rep;
+    private PartidoXVoto[] representacion;
 
     public PriorityQueueTupla(int buffer) {
         tamaño = 0;
-        rep = new PartidoXVoto[buffer];
+        representacion = new PartidoXVoto[buffer];
     }
 
     public PriorityQueueTupla(PartidoXVoto[] arreglo) { 
         tamaño = arreglo.length;
-        rep = new PartidoXVoto[tamaño];
+        representacion = new PartidoXVoto[tamaño];
         for (int i = 0; i < arreglo.length; i++) {
-            rep[i] = arreglo[i];
+            representacion[i] = arreglo[i];
         }
         for (int h = altura() - 1; h > 0; h--) { //algoritmo de Floyd
             for (int i = (int)Math.pow(2, h-1) - 1; i < (int)Math.pow(2, h) - 1; i++) {
@@ -33,19 +33,19 @@ public class PriorityQueueTupla implements IHeap<PartidoXVoto> {
 
     public int cardinal() { return tamaño; }
 
-    public PartidoXVoto maximo() { return rep[0]; }
+    public PartidoXVoto maximo() { return representacion[0]; }
 
     public PartidoXVoto segundoMaximo() { 
-        if (tamaño == 2) return rep[1];
-        else return ((rep[1].compareTo(rep[2]) > 0) ? rep[1] : rep[2]);  
+        if (tamaño == 2) return representacion[1];
+        else return ((representacion[1].compareTo(representacion[2]) > 0) ? representacion[1] : representacion[2]);  
     }
 
     public void encolar(PartidoXVoto elem) {
-        rep[tamaño] = elem;
+        representacion[tamaño] = elem;
         int ielem = tamaño;
         tamaño += 1;
         int ipadre = (ielem - 1) / 2;
-        while (rep[ielem].compareTo(rep[ipadre]) > 0) {
+        while (representacion[ielem].compareTo(representacion[ipadre]) > 0) {
             intercambiar(ielem, ipadre);
             ielem = ipadre;
             ipadre = (ielem - 1) / 2;
@@ -57,9 +57,9 @@ public class PriorityQueueTupla implements IHeap<PartidoXVoto> {
         if(tamaño == 0){
            res = null;
         }else{
-          res = rep[0];
-        rep[0] = rep[tamaño - 1];
-        rep[tamaño-1] = null;
+          res = representacion[0];
+        representacion[0] = representacion[tamaño - 1];
+        representacion[tamaño-1] = null;
         tamaño -= 1;
         bajar(0);
         }
@@ -68,7 +68,7 @@ public class PriorityQueueTupla implements IHeap<PartidoXVoto> {
 
     private void bajar(int raiz) {
         int ihijo = iHijoMayor(raiz);
-        while (rep[ihijo] != null && rep[raiz].compareTo(rep[ihijo]) < 0) {
+        while (representacion[ihijo] != null && representacion[raiz].compareTo(representacion[ihijo]) < 0) {
             intercambiar(raiz, ihijo);
             raiz = ihijo;
             ihijo = iHijoMayor(ihijo);
@@ -76,17 +76,17 @@ public class PriorityQueueTupla implements IHeap<PartidoXVoto> {
     }
 
     private void intercambiar(int i, int j) {
-        PartidoXVoto temp = rep[i];
-        rep[i] = rep[j];
-        rep[j] = temp;
+        PartidoXVoto temp = representacion[i];
+        representacion[i] = representacion[j];
+        representacion[j] = temp;
     }
 
     private int iHijoMayor(int i) {
         int iHijoIzq = i * 2 + 1;
-        if (iHijoIzq >= tamaño) return i; //cuidado
+        if (iHijoIzq >= tamaño) return i; //Como los casos son excluyentes, retornamos antes
         int iHijoDer = i * 2 + 2;
         if (iHijoDer >= tamaño) return iHijoIzq;
-        else return (rep[iHijoDer].compareTo(rep[iHijoIzq]) > 0) ? iHijoDer : iHijoIzq;
+        else if  (representacion[iHijoDer].compareTo(representacion[iHijoIzq]) > 0)  {return iHijoDer;} else {return iHijoIzq;}
     }
 
     
