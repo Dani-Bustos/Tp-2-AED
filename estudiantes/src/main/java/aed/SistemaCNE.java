@@ -37,7 +37,13 @@ public class SistemaCNE {
         private int idPrimero;
         private int idSegundo;
         //BORRADOR 
-        // INV REP: El idPrimero es la
+        // INV REP: El idPrimero es la posicion de _arrPresidente en la cual se encuentra el elemento mas grande del
+        // arreglo, es decir, es el partido (sin contar los votos en blanco) con mas votos.
+        // El idSegundo es la posicion de _arrPresidencial en la cual se encuentra el elemento que es menor o igual al mas grande
+        // pero mayor a todos los demas elementos.
+        // El total es la suma de todos los elementos de _arrPresidencial, es decir, el total de votos.
+        // _arrPresidencial es un arreglo en el cual en la posicion i-esima se encuentra la cantidad de votos para presidente que obtuvo
+        // el i-esimo partido. En la ultima posicion del arreg
         Presidencial(int longitud){
             this._arrPresidente = new int[longitud];
             _Total = 0;
@@ -208,7 +214,7 @@ public class SistemaCNE {
         while(l != r){
            if(arreglo[m] == elem){
             return m + 1;   // el arreglo es no incluido, con lo cual si lo encontramos, es la siguiente pos de mesa
-           }else if(r-l == 1 && elem != r && elem != l){ //caso en el que no pertenezeca a la lista directamente
+           }else if(r-l == 1 && elem != arreglo[r] && elem != arreglo[l]){ //caso en el que no pertenezeca a la lista directamente
             if(elem < arreglo[l]){
             return l;
             } 
