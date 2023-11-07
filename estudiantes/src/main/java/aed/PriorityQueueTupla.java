@@ -2,17 +2,17 @@ package aed;
 
 import aed.SistemaCNE.PartidoXVoto;
 
-public class Heap implements IHeap<PartidoXVoto> {
+public class PriorityQueueTupla implements IHeap<PartidoXVoto> {
     
     private int tamaño;
     private PartidoXVoto[] rep;
 
-    public Heap(int buffer) {
+    public PriorityQueueTupla(int buffer) {
         tamaño = 0;
         rep = new PartidoXVoto[buffer];
     }
 
-    public Heap(PartidoXVoto[] arreglo) { 
+    public PriorityQueueTupla(PartidoXVoto[] arreglo) { 
         tamaño = arreglo.length;
         rep = new PartidoXVoto[tamaño];
         for (int i = 0; i < arreglo.length; i++) {

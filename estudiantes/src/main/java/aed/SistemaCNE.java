@@ -9,6 +9,7 @@ public class SistemaCNE {
     private String[] nomDistrito;
     private int[] bancasXDistrito;
     private int[] mesas; //guardamos el ultimo elemento de la mesa, no incluido
+    
     public class  PartidoXVoto implements Comparable<PartidoXVoto>{
            int idPartido;
            int Votos;
@@ -33,24 +34,24 @@ public class SistemaCNE {
     public class Presidencial{
         private int[] _arrPresidente;
         private int _Total;
-        private PartidoXVoto Primero;
-        private PartidoXVoto Segundo;
+        private int idPrimero;
+        private int idSegundo;
         Presidencial(int longitud){
             this._arrPresidente = new int[longitud];
             _Total = 0;
-            Primero = new PartidoXVoto(0, 0);
-            Segundo = new PartidoXVoto(1, 0);
+            idPrimero = 0;
+            idSegundo = 1;
         }
        
         int get(int id){
             return _arrPresidente[id];
         }
         int max(){
-         return Primero.Votos;
+         return _arrPresidente[idPrimero];
        } 
 
         int sdoMax(){
-            return Segundo.Votos;
+            return _arrPresidente[idSegundo];
         }
        
        int total(){
@@ -65,12 +66,13 @@ public class SistemaCNE {
            if(i != votos.length-1){ //No queremos que los votos en blanco puedan ser primeros
             
             
-            if(_arrPresidente[i] > Primero.Votos){
-                Segundo = Primero;
-                Primero = new PartidoXVoto(i, _arrPresidente[i]);
+            if(_arrPresidente[i] > _arrPresidente[idPrimero]){
+                idSegundo = idPrimero;
+                idPrimero = i;
            }
-           else if (_arrPresidente[i] > Segundo.Votos && !(_arrPresidente[i] > Primero.Votos)){
-                Segundo = new PartidoXVoto(i, _arrPresidente[i]);
+           //debemos utiliza Mayor igual que el primero porque sino puede ocurrir que el primero sea le mismo partido que el segundo
+           else if (_arrPresidente[i] > _arrPresidente[idSegundo] && !(_arrPresidente[i] >= _arrPresidente[idPrimero])){
+                idSegundo = i;
            }
         }
         }
@@ -80,7 +82,7 @@ public class SistemaCNE {
     public class Diputados{
         private int[][] votosXDistrito; //Primer Array distrito, segundo array votos de cada partido 
         
-        private Heap[] heapXDistrito;
+        private PriorityQueueTupla[] heapXDistrito;
         private int total;
         private int[][] resultadosPrecalculados;
         private boolean[] heapValido;
@@ -90,7 +92,7 @@ public class SistemaCNE {
         Diputados(int longitudDistritos, int longitudPartidos){
           votosXDistrito = new int[longitudDistritos][longitudPartidos]; //se escribe asi?
           heapValido = new boolean[longitudDistritos];
-          heapXDistrito = new Heap[longitudDistritos];
+          heapXDistrito = new PriorityQueueTupla[longitudDistritos];
           resultadosPrecalculados = new int[longitudDistritos][longitudPartidos-1];
         }
         
@@ -127,7 +129,7 @@ public class SistemaCNE {
                 }
             }
             
-            heapXDistrito[idDistrito] = new Heap(votosPasanMargen);
+            heapXDistrito[idDistrito] = new PriorityQueueTupla(votosPasanMargen);
            
             heapValido[idDistrito] = true;
             
@@ -257,12 +259,12 @@ public class SistemaCNE {
     public boolean hayBallotage(){
         //si esta vacio, es verdadero
         boolean res;
-        if (votosPresidente.max() = 0) {
+        if (votosPresidente.max() == 0) {
             res = true;
         }else{
             //multiplicamos por 100 para no utilizar floating points
-            if (votosPresidente.max*100 > votosPresidente.total*45 || 
-              (votosPresidente.max*100 > votosPresidente.total*40 && (votosPresidente.max - votosPresidente.sdoMax)*100 > votosPresidente.total*10) ){
+            if (votosPresidente.max()*100 > votosPresidente.total()*45 || 
+              (votosPresidente.max()*100 > votosPresidente.total()*40 && (votosPresidente.max() - votosPresidente.sdoMax())*100 > votosPresidente.total()*10) ){
                   res = false;
             }else{
                 res = true;
