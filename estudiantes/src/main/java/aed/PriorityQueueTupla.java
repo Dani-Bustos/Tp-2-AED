@@ -53,11 +53,16 @@ public class PriorityQueueTupla implements IHeap<PartidoXVoto> {
     }
 
     public PartidoXVoto desencolar() {
-        PartidoXVoto res = rep[0];
+        PartidoXVoto res;
+        if(tamaño == 0){
+           res = null;
+        }else{
+          res = rep[0];
         rep[0] = rep[tamaño - 1];
         rep[tamaño-1] = null;
         tamaño -= 1;
         bajar(0);
+        }
         return res;
     }
 

@@ -141,10 +141,14 @@ public class SistemaCNE {
                 
                 for (int i = 0; i < cantidadBancas; i++) {
                     PartidoXVoto max = heapXDistrito[idDistrito].desencolar();
+                    if(max != null){
+
+                    
                     bancas[max.idPartido] += 1;
                     PartidoXVoto recalculado = new PartidoXVoto(max.idPartido,
                             (votosXDistrito[idDistrito][max.idPartido]) / (bancas[max.idPartido] + 1));
                     heapXDistrito[idDistrito].encolar(recalculado);
+                    }
                 }
                 resultadosPrecalculados[idDistrito] = bancas;
                 heapValido[idDistrito] = false;
