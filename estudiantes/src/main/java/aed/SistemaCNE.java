@@ -1,6 +1,6 @@
 package aed;
 
-import aed.SistemaCNE.PartidoXVoto;
+
 
 public class SistemaCNE {
     private Presidencial votosPresidente;
@@ -9,7 +9,15 @@ public class SistemaCNE {
     private String[] nomDistrito;
     private int[] bancasXDistrito;
     private int[] mesas; //guardamos el ultimo elemento de la mesa, no incluido
-    // INV REP: A TERMINAR
+    // INV REP:
+    // Valen los invariantes de Las clases Presiedencial Y Diputados en votosPresidente y VotosDiputados
+    //Hay tantos nombres de Partidos como la longitud de _arrPresidente en votosPresidente, y ningun elemtento esta repetido
+    //Hay tantos nombres de distritos como elementos en Mesas, y ningun elemetno esta repetido
+    //Hay tantos elementos en bancasXDistrito como en Mesas, y sus elementos son mayores o iguales a 0
+    //En mesas todos sus elementso son diferentes, estan en orden creciente y son mayores o iguales a 0
+    //La longitud de votosDiputados.votosXDistrito es igual a la de nomDistrito
+    
+    
     public class  PartidoXVoto implements Comparable<PartidoXVoto>{
            int idPartido;
            int Votos;
@@ -108,7 +116,10 @@ public class SistemaCNE {
         private int[][] resultadosPrecalculados;
         private boolean[] heapValido;
         // Inv Rep
-        // Para toda posiicon de VotosXDistrito, se cumple que todos los elementos de el arreglo en esa posicion, son positivos o 0
+        
+        // Vale el invariante de PriorityQueueTupla
+        
+        // Para toda posicion de VotosXDistrito, se cumple que todos los elementos de el arreglo en esa posicion, son positivos o 0
         // Todos los arreglos en VotosXDistrito tienen la misma longitud. Aqui guardamos los votos de cada partido en cada distrito
         
         // La posicion iesima del arreglo total estan la suma de los elementos del arreglo votosXDistrito en la posicion iesima.
@@ -180,23 +191,32 @@ public class SistemaCNE {
             heapValido[idDistrito] = true;
             
         }
-       
+        //Complejidad O(Dd*log(P))
         int[] devolverBancas(int idDistrito,int cantidadBancas) {
             // Chequeamos si ya calculamos el resultado de este distrito
+            //O(Dd*log(P)) // PREGUNTAR EL VIERNES
             if (heapValido[idDistrito]) {
                 //O(P)
                 int[] bancas = new int[votosXDistrito[0].length - 1];
                 
+                 //Realizamos el calculo De Dhondt:
+                 // Tomamos el maximo elemento del heap, lo dividimos por la cantidad de bancas obtenidas por ese partido hasta el momento + 1 ,
+                 // le sumamos una banca mas a ese partido, y lo reinsertamos, con su nuevo valor en el heap.
+                 // Repetimos el proceso hasta agotar las bancas disponibles
+
+             
+                //O(Dd*log(P)), con P  la cantidad de partidos y Dd la cantidad de bancas disponibles
                 for (int i = 0; i < cantidadBancas; i++) {
                     //O(log(P)), en el peor caso todos los partidos pasan el margen de 3 por ciento
                     PartidoXVoto max = heapXDistrito[idDistrito].desencolar();
-                    if(max != null){
-
                     
+                    if(max != null){                      
                     bancas[max.idPartido] += 1;
+                    
                     PartidoXVoto recalculado = new PartidoXVoto(max.idPartido,
                             (votosXDistrito[idDistrito][max.idPartido]) / (bancas[max.idPartido] + 1));
-                    heapXDistrito[idDistrito].encolar(recalculado);
+                    //O(log(P))
+                            heapXDistrito[idDistrito].encolar(recalculado);
                     }
                 }
                 resultadosPrecalculados[idDistrito] = bancas;
@@ -205,6 +225,7 @@ public class SistemaCNE {
             
             
             } else {
+                //O(1)
                 return resultadosPrecalculados[idDistrito];
             }
         }
@@ -330,14 +351,17 @@ public class SistemaCNE {
     public int votosDiputados(int idPartido, int idDistrito) {
         return votosDiputados.get(idDistrito,idPartido);
     }
-
+    
+    //Complejidad O(Dd*log(P)) con Dd las bancas disponibles en el distrito y P la cantidad de partidos
     public int[] resultadosDiputados(int idDistrito){
         
         int cantidadBancas = bancasXDistrito[idDistrito];
+        //O(Dd*Log(P))
         int[] res = votosDiputados.devolverBancas(idDistrito, cantidadBancas);
         return res;
     }
 
+    //Complejidad O(1)
     public boolean hayBallotage(){
         //si esta vacio, es verdadero
         boolean res;
@@ -345,6 +369,7 @@ public class SistemaCNE {
             res = true;
         }else{
             //multiplicamos por 100 para no utilizar floating points
+           //O(1), comparasiones y acceder a valores en arrays dentro de las clases
             if (votosPresidente.max()*100 > votosPresidente.total()*45 || 
               (votosPresidente.max()*100 > votosPresidente.total()*40 && (votosPresidente.max() - votosPresidente.sdoMax())*100 > votosPresidente.total()*10) ){
                   res = false;
