@@ -206,12 +206,12 @@ public class SistemaCNE {
                 
                 
                 //Realizamos el calculo De Dhondt:
-                // Tomamos el maximo elemento del heap, lo dividimos por la cantidad de bancas obtenidas por ese partido hasta el momento + 1 ,
-                // le sumamos una banca mas a ese partido, y lo reinsertamos, con su nuevo valor en el heap.
-                // Repetimos el proceso hasta agotar las bancas disponibles
+                // Tomamos el máximo elemento del heap, lo dividimos por la cantidad de bancas obtenidas por ese partido hasta el momento + 1 ,
+                // le sumamos una banca más a ese partido, y lo reinsertamos con su nuevo valor en el heap.
+                // Repetimos el proceso hasta agotar las bancas disponibles.
 
              
-                //O(Dd*log(P)), con P  la cantidad de partidos y Dd la cantidad de bancas disponibles
+                //O(Dd*log(P)), con P la cantidad de partidos y Dd la cantidad de bancas disponibles
                 for (int i = 0; i < cantidadBancas; i++) {
                     //O(log(P)), en el peor caso todos los partidos pasan el margen de 3 por ciento
                     PartidoXVoto max = heapXDistrito[idDistrito].desencolar();
@@ -242,23 +242,23 @@ public class SistemaCNE {
         private int presidente;
         private int diputados;
         // Inv Rep:
-        // Tanto presidentes como Diputados son numeros positivos o 0
+        // Tanto presidentes como Diputados son números positivos ó 0.
         
         
-        //Complejidad O(1), asignacion de valores
+        //Complejidad O(1), asignacion de valores.
         VotosPartido(int presidente, int diputados)
         {
             this.presidente = presidente; this.diputados = diputados;
         }
         
-        //Complejidad O(1)
+        //Complejidad O(1).
         public int votosPresidente(){return presidente;}
         
-        //Complejidad O(1)
+        //Complejidad O(1).
         public int votosDiputados(){return diputados;}
     }
 
-    //Complejidad O(D*P), siendo D la cantidad de Distritos y P la de Partidos
+    //Complejidad O(D*P), siendo D la cantidad de Distritos y P la de Partidos.
     public SistemaCNE(String[] nombresDistritos, int[] diputadosPorDistrito, String[] nombresPartidos, int[] ultimasMesasDistritos) {
      nomDistrito = nombresDistritos;
      bancasXDistrito = diputadosPorDistrito;
