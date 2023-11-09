@@ -10,11 +10,11 @@ public class SistemaCNE {
     private int[] bancasXDistrito;
     private int[] mesas; //guardamos el ultimo elemento de la mesa, no incluido
     // INV REP:
-    // Valen los invariantes de Las clases Presiedencial Y Diputados en votosPresidente y VotosDiputados
-    //Hay tantos nombres de Partidos como la longitud de _arrPresidente en votosPresidente, y ningun elemtento esta repetido
+    //Valen los invariantes de las clases Presidencial Y Diputados en votosPresidente y VotosDiputados
+    //Hay tantos nombres de Partidos como la longitud de _arrPresidente en votosPresidente, y ningun elemento esta repetido
     //Hay tantos nombres de distritos como elementos en Mesas, y ningun elemetno esta repetido
     //Hay tantos elementos en bancasXDistrito como en Mesas, y sus elementos son mayores o iguales a 0
-    //En mesas todos sus elementso son diferentes, estan en orden creciente y son mayores o iguales a 0
+    //En mesas todos sus elementos son diferentes, estan en orden creciente y son mayores o iguales a 0
     //La longitud de votosDiputados.votosXDistrito es igual a la de nomDistrito
     
     
@@ -125,11 +125,12 @@ public class SistemaCNE {
         // La posicion iesima del arreglo total estan la suma de los elementos del arreglo votosXDistrito en la posicion iesima.
         // Es decir los votos totales del distrito son la suma de los votos del distrito
         // El largo de VotosXDistrito es igual  al tamaño de heapXDistrito. El largo de heapValido es igual al largo de heapxDistrito;
-        // El largo de resultados precalculados es igual al largo de VotosXDistrito, y todos sus elementos tienen la longitud de la cantidad de partidos menos el blanco
+        // El largo de resultados precalculados es igual al largo de VotosXDistrito, 
+        // y todos sus elementos tienen la longitud de la cantidad de partidos menos el blanco
         // (cantidad de partidos siento la longitud de el elemento votosXDistirto[0])
         
         // El heapValido iesimo es True si solo si para cada posicion de votosXDistrito, se cumple que todos elementos 
-        //(salvo los votos en blanco) que sean superior el 3% de el total iesimo de ese arreglo estan en la representacion del heapXdistirto iesimo.
+        //(salvo los votos en blanco) que sean superior el 3% del total iesimo de ese arreglo estan en la representacion del heapXdistirto iesimo.
         // Es decir, en el heap guardamos los votos de aquellos partidos que pasan el umbral de 3% en su distrito, Y heap valido nos indica si ese heap esta 
         // intacto o no. Si no lo estuviese utilizamos el resultado precalculado iesimo(que corresponde al distrito). 
         
@@ -161,6 +162,8 @@ public class SistemaCNE {
                 total[idDistrito] += votosMesa[i].Votos;
             }
             
+
+
             //Contamos cuantos pasan el 3% para definir la longitud del arreglo que sera el Heap, sin votos en blanco
             // Theta(P)
             for(int i = 0; i<votosXDistrito[idDistrito].length-1;i++){
@@ -170,7 +173,7 @@ public class SistemaCNE {
                 }
             }
             
-            //Creamos el array con aquellos q pasan el 3 por ciento, que luego sera el heap;
+            //Creamos el array con aquellos que pasan el 3 por ciento, que luego sera el heap;
             //Necesitamos un indice separado para el segundo arreglo, ya que no se corresponden las posiciones con el original
             //a la hora de asignar
             //Theta(P), observar que crear un Nuevo "PartidoXVoto" es O(1), opera como una tupla
@@ -187,22 +190,25 @@ public class SistemaCNE {
             //Internamente el HeapXDistrito utiliza el algoritmo de Floyd cuando se le pasa un arreglo, de complejidad lineal
             //O(P)
             heapXDistrito[idDistrito] = new PriorityQueueTupla(votosPasanMargen);
-           
+          
+            // Theta(P), seteamos los resultados anteriores en este distrito a 0
+            for(int i = 0; i < resultadosPrecalculados[idDistrito].length;i++){
+                 resultadosPrecalculados[idDistrito][i] = 0;
+            }
             heapValido[idDistrito] = true;
             
         }
         //Complejidad O(Dd*log(P))
         int[] devolverBancas(int idDistrito,int cantidadBancas) {
             // Chequeamos si ya calculamos el resultado de este distrito
-            //O(Dd*log(P)) // PREGUNTAR EL VIERNES
+            //O(Dd*log(P)) 
             if (heapValido[idDistrito]) {
-                //O(P)
-                int[] bancas = new int[votosXDistrito[0].length - 1];
                 
-                 //Realizamos el calculo De Dhondt:
-                 // Tomamos el maximo elemento del heap, lo dividimos por la cantidad de bancas obtenidas por ese partido hasta el momento + 1 ,
-                 // le sumamos una banca mas a ese partido, y lo reinsertamos, con su nuevo valor en el heap.
-                 // Repetimos el proceso hasta agotar las bancas disponibles
+                
+                //Realizamos el calculo De Dhondt:
+                // Tomamos el maximo elemento del heap, lo dividimos por la cantidad de bancas obtenidas por ese partido hasta el momento + 1 ,
+                // le sumamos una banca mas a ese partido, y lo reinsertamos, con su nuevo valor en el heap.
+                // Repetimos el proceso hasta agotar las bancas disponibles
 
              
                 //O(Dd*log(P)), con P  la cantidad de partidos y Dd la cantidad de bancas disponibles
@@ -211,17 +217,17 @@ public class SistemaCNE {
                     PartidoXVoto max = heapXDistrito[idDistrito].desencolar();
                     
                     if(max != null){                      
-                    bancas[max.idPartido] += 1;
+                    resultadosPrecalculados[idDistrito][max.idPartido] += 1;
                     
                     PartidoXVoto recalculado = new PartidoXVoto(max.idPartido,
-                            (votosXDistrito[idDistrito][max.idPartido]) / (bancas[max.idPartido] + 1));
+                            (votosXDistrito[idDistrito][max.idPartido]) / (resultadosPrecalculados[idDistrito][max.idPartido] + 1));
                     //O(log(P))
                             heapXDistrito[idDistrito].encolar(recalculado);
                     }
                 }
-                resultadosPrecalculados[idDistrito] = bancas;
+            
                 heapValido[idDistrito] = false;
-                return bancas;
+                return resultadosPrecalculados[idDistrito];
             
             
             } else {
@@ -239,7 +245,7 @@ public class SistemaCNE {
         // Tanto presidentes como Diputados son numeros positivos o 0
         
         
-        //Complejidad O(1), asignacion de valores 2 veces;
+        //Complejidad O(1), asignacion de valores
         VotosPartido(int presidente, int diputados)
         {
             this.presidente = presidente; this.diputados = diputados;
@@ -291,7 +297,7 @@ public class SistemaCNE {
     public void registrarMesa(int idMesa, VotosPartido[] actaMesa) {
         //Actualizamos Votos Presidenciales
         
-        //Complejidad O(P)
+        // theta(P)
         int []vPres = new int[actaMesa.length];
         for(int i = 0;i < actaMesa.length;i++){
             vPres[i] = i;
@@ -304,7 +310,7 @@ public class SistemaCNE {
         
         //O(log(D)) Obtener id Distrito usa una busqueda binaria sobre un arreglo ordenado , de longitud distritos
         int distritoMesa = ObtenerIdDistrito(idMesa);
-        //O(D), creacion de tupla es O(1), realizado tantas veces como la cantidad de distritos
+        //O(D) creacion de tupla es O(1), realizado tantas veces como la cantidad de distritos
         PartidoXVoto[] vDiputados = new PartidoXVoto[actaMesa.length];
         for (int i = 0; i < actaMesa.length; i++) {
             vDiputados[i] = new PartidoXVoto(i, actaMesa[i].diputados);
@@ -315,7 +321,7 @@ public class SistemaCNE {
     }
  
     //Complejidad O(log(n)), siendo  n la longitud del arreglo pasado
-    // Utilizamos una busqueda binaria para obtenerlo, ya que segun el requiere las mesas son siempre un arreglo ordenado.
+    // Utilizamos una busqueda binaria para obtenerlo, ya que segun la especificacion y el invRep las mesas son siempre un arreglo ordenado.
     // La busqueda binaria tiene complejidad logaritimica, ya que reduce el rango de busqueda a la mitad en cada iteracion del while
     private int ObtenerIdDistrito(int elem){
         int izq = 0;
@@ -369,7 +375,7 @@ public class SistemaCNE {
             res = true;
         }else{
             //multiplicamos por 100 para no utilizar floating points
-           //O(1), comparasiones y acceder a valores en arrays dentro de las clases
+           //O(1), comparaciones y se accede a valores en arrays dentro de las clases
             if (votosPresidente.max()*100 > votosPresidente.total()*45 || 
               (votosPresidente.max()*100 > votosPresidente.total()*40 && (votosPresidente.max() - votosPresidente.sdoMax())*100 > votosPresidente.total()*10) ){
                   res = false;

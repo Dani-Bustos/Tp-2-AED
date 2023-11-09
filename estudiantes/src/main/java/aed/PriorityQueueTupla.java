@@ -27,7 +27,7 @@ public class PriorityQueueTupla implements IHeap<PartidoXVoto> {
         for (int i = 0; i < arreglo.length; i++) {
             representacion[i] = arreglo[i];
         }
-        //Observar que la altua es menor o igual a la longitud del arreglo
+        //Observar que la altura es menor o igual a la longitud del arreglo
         for (int h = altura() - 1; h > 0; h--) { //Algoritmo de Floyd para Array2heap
             for (int i = (int)Math.pow(2, h-1) - 1; i < (int)Math.pow(2, h) - 1; i++) {
                 bajar(i);
