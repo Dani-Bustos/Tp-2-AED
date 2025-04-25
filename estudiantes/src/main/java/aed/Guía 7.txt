@@ -1,0 +1,140 @@
+Modulo MatrizFinitaImpl implementa Matriz infinita
+
+var matriz : Array<Array<bool>>
+var largoDeFilas: int // O(1)
+var largoDeColumnas: int // O(1)
+var estaComplementada: bool // O(1)
+
+
+proc crear (out m: MatrizInfinita) {  // Complejidad: O(1)
+
+   m.matriz := new Array<Array<bool>>[1][1]
+   m.matriz[0][0]:= false; // O(1)
+   m.largoDeFilas := 1; // O(1)
+   m.largoDeColumnas := 1; // O(1)
+   m.paraComplementar := true; O(1)
+   m.estaComplementada := false; O(1)
+
+}
+
+proc asignar (inout m: MatrizInfinita, in fila: int , in columna: int , in valor: bool) {
+     
+     if (fila >= m.largoDeFilas || columna >= m.largoDeColumnas){ // si se quiere agregar en una posicion que no existe
+        
+         if (fila >= m.largoDeFilas){
+           int nuevolargodefilas := fila + 1;
+         }
+         else {
+            int nuevolargodefilas := m.largoDeFilas;
+         }
+         if (columna >= m.largoDeColumnas){
+            int nuevolargodecolumnas := columna + 1;
+         }
+         else {
+            int nuevolargodecolumnas := m.largoDeColumnas;
+         }
+
+         Array<Array<bool>> nuevamatriz := new Array<Array<bool>>[nuevolargodefilas][nuevolargodecolumnas];
+
+         int i := 0;
+
+         while (i < m.largoDeFilas){ // Agrego lo que ya estaba
+            int j := 0;
+            while (j < m.largoDeColumnas){
+                nuevamatriz[i][j] := m.matriz[i][j];
+                j++;
+            }
+            while (j < nuevolargodecolumnas){
+                nuevamatriz[i][j] := false;
+                j++;
+            }
+
+            while (i < nuevolargodefilas){ // Agrego las nuevas filas, con false en todas sus posiciones;
+                int k := 0;
+                while (k < nuevolargodecolumnas){
+                    nuevamatriz[i][k] := false;
+                    k++;
+                }
+                i++
+            }
+
+         }
+
+            m.largoDeFilas := nuevolargodefilas;
+            m.largoDeColumnas := nuevolargodecolumnas;
+
+     }
+
+      if (!m.estaComplementada){
+        m.matriz[fila][columna] := valor;
+       }
+       else {
+        m.matriz[fila][columna] := !valor;
+       }
+    
+}
+
+proc ver (in m : MatrizInfinita , in fila : int , in columna : int, out res: bool){ // Complejidad : O(1)
+    if (!m.estaComplementada){ // O(1)
+        if (fila >= m.largoDeFilas || columna >= m.largoDeColumnas){ // O(1)
+            res := false; // O(1)
+        }
+        else { 
+            res:= m.matriz[fila][columna]; // O(1)
+        }
+    }
+    else {
+        if (fila >= m.largoDeFilas || columna >= m.largoDeColumnas){ // O(1)
+            res := true; // O(1)
+        }
+        else {
+            res := !(m.matriz[fila][columna]); // O(1)
+        }
+    }
+}
+
+proc complementar (inout m : MatrizInfinita){ // Complejidad : O(1)
+    m.estaComplementada := !(m.estaComplementada); // O(1)
+}
+
+proc intersecar (in m : MatrizInfinita , in n : MatrizInfinita , out res : MatrizInfinita){
+    res = crear();
+    if (m.largoDeFilas >= n.largoDeFilas){
+        int i := 0;
+        while (i < m.largoDeFilas){
+            if (m.largoDeColumnas >= n.largoDeColumnas){
+                int j := 0;
+                while (j < m.largoDeColumnas){
+                    bool conjuncion := ver(m , i , j) && ver(n , i , j);
+                    asignar(res , i , j , conjuncion);
+                }
+            }
+            else {
+                int j := 0;
+                while (j < n.largoDeColumnas){
+                    bool conjuncion := ver(m , i , j) && ver(n , i , j);
+                    asignar(res , i , j , conjuncion);
+                }
+            }
+        }
+    }
+    else {
+        int i := 0;
+        while (i < n.largoDefilas){
+            if (m.largoDeColumnas >= n.largoDeColumnas){
+                int j := 0;
+                while (j < m.largoDeColumnas){
+                    bool conjuncion := ver(m , i , j) && ver(n , i , j);
+                    asignar(res , i , j , conjuncion);
+                }
+            }
+            else {
+                int j := 0;
+                while (j < n.largoDeColumnas){
+                    bool conjuncion := ver(m , i , j) && ver(n , i , j);
+                    asignar(res , i , j , conjuncion);
+                }
+            }
+        }
+    }
+}
